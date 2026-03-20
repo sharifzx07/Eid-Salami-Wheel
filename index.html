@@ -1,127 +1,32 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<title>Salami Diben Koto?</title>
-
-<style>
-body {
-  text-align: center;
-  font-family: Arial;
-  background: #0f3d2e;
-  color: white;
-}
-
-h1 {
-  color: gold;
-}
-
-.container {
-  position: relative;
-  width: 300px;
-  margin: auto;
-}
-
-canvas {
-  transition: transform 3s ease-out;
-}
-
-/* Arrow pointer */
-.arrow {
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 30px solid yellow;
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-button {
-  margin-top: 20px;
-  padding: 12px 25px;
-  font-size: 18px;
-  background: gold;
-  border: none;
-  border-radius: 10px;
-}
-
-#result {
-  margin-top: 20px;
-  font-size: 18px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Salami Diben Koto?</h1>
-<p>Spin the wheel to claim your Eid Salami!</p>
-
-<div class="container">
-  <div class="arrow"></div>
-  <canvas id="wheel" width="300" height="300"></canvas>
-</div>
-
-<button onclick="spin()">SPIN NOW</button>
-
-<div id="result"></div>
-
-<audio id="spinSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
-
-<script>
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-
-const options = ["5000", "1000", "500", "200", "100", "Dua"];
-const colors = ["#ff3b3b","#ff8c00","#00c853","#00b0ff","#7c4dff","#ffd600"];
-
-function drawWheel() {
-  const arc = Math.PI / 3;
-
-  for (let i = 0; i < options.length; i++) {
-    ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(150,150);
-    ctx.arc(150,150,150,i*arc,(i+1)*arc);
-    ctx.fill();
-
-    ctx.save();
-    ctx.translate(150,150);
-    ctx.rotate(i*arc + arc/2);
-    ctx.fillStyle="white";
-    ctx.font="16px Arial";
-    ctx.fillText(options[i],60,0);
-    ctx.restore();
-  }
-}
-drawWheel();
-
 function spin() {
   const wheel = document.getElementById("wheel");
   const sound = document.getElementById("spinSound");
 
-  // Sound play
+  // sound play
   sound.play();
 
-  // Vibration (mobile)
+  // vibration
   if (navigator.vibrate) {
     navigator.vibrate(200);
   }
 
-  // Random spin animation
-  let deg = Math.floor(Math.random()*360) + 1440;
-  wheel.style.transform = "rotate("+deg+"deg)";
+  // 👉 Dua segment index (last option = 5)
+  const duaIndex = 5;
 
-  // Always Dua result
-  setTimeout(()=>{
+  // total options = 6
+  const sectorAngle = 360 / 6;
+
+  // 👉 arrow top এ থাকে, তাই adjust করতে হবে
+  const stopAngle = (360 - (duaIndex * sectorAngle) - (sectorAngle / 2));
+
+  // extra spin (real feel)
+  const finalDeg = 360 * 5 + stopAngle;
+
+  wheel.style.transform = "rotate(" + finalDeg + "deg)";
+
+  // result message
+  setTimeout(() => {
     document.getElementById("result").innerHTML =
-    "আপনার সাবস্ক্রিপশন সারা বছর এক্সপায়ারড ছিল। সালামি রিলোড করার জন্য পর্যাপ্ত 'যোগাযোগ' পাওয়া যায়নি। দয়া করে দোয়া নিয়ে সন্তুষ্ট থাকুন।";
-  },3000);
+      "আপনার সাবস্ক্রিপশন সারা বছর এক্সপায়ারড ছিল। সালামি রিলোড করার জন্য পর্যাপ্ত 'যোগাযোগ' পাওয়া যায়নি। দয়া করে দোয়া নিয়ে সন্তুষ্ট থাকুন।";
+  }, 3000);
 }
-</script>
-
-</body>
-</html>
