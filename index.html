@@ -1,127 +1,142 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<title>Salami Diben Koto?</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ঈদ সালামি ভাগ্য পরীক্ষা!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle, #1a0136, #000000);
+            color: white;
+            overflow: hidden;
+        }
 
-<style>
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<title>Salami Diben Koto?</title>
-<style>
-body {
-  text-align: center;
-  font-family: Arial;
-  background: #0f3d2e;
-  color: white;
-}
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+        }
 
-h1 { color: gold; }
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #ffd700;
+            transition: transform 4s cubic-bezier(0.2, 0, 0.2, 1);
+        }
 
-.container { position: relative; width: 300px; margin: auto; }
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ffd700;
+            z-index: 10;
+        }
 
-canvas {
-  transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
-}
+        .spin-btn {
+            margin-top: 40px;
+            padding: 12px 45px;
+            font-size: 20px;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
 
-.arrow {
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 30px solid yellow;
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-button {
-  margin-top: 20px;
-  padding: 12px 25px;
-  font-size: 18px;
-  background: gold;
-  border: none;
-  border-radius: 10px;
-}
-
-#result { margin-top: 20px; font-size: 18px; }
-</style>
+        #message {
+            margin-top: 25px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            padding: 0 10px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Salami Diben Koto?</h1>
-<p>Spin the wheel to claim your Eid Salami!</p>
+    <h2 style="color: #ffd700;">সালামি ভাগ্য পরীক্ষা 🌙</h2>
+    
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="320" height="320"></canvas>
+    </div>
 
-<div class="container">
-  <div class="arrow"></div>
-  <canvas id="wheel" width="300" height="300"></canvas>
-</div>
+    <button class="spin-btn" id="spinBtn" onclick="spin()">ঘুরিয়ে দেখুন!</button>
+    <div id="message"></div>
 
-<button onclick="spin()">SPIN NOW</button>
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const segments = ["১০০০", "৫০০", "২০০", "১০০", "৫০", "২০", "১০", "১", "দোয়া"];
+        const colors = ["#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6", "#1abc9c", "#e67e22", "#ecf0f1", "#95a5a6"];
+        
+        const totalSegments = segments.length;
+        const arc = 2 * Math.PI / totalSegments;
+        let currentRotation = 0;
 
-<div id="result"></div>
+        function drawWheel() {
+            segments.forEach((label, i) => {
+                const angle = i * arc;
+                ctx.fillStyle = colors[i];
+                ctx.beginPath();
+                ctx.moveTo(160, 160);
+                ctx.arc(160, 160, 160, angle, angle + arc);
+                ctx.fill();
 
-<audio id="spinSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+                ctx.save();
+                ctx.translate(160, 160);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 16px Arial";
+                ctx.fillText(label, 150, 5);
+                ctx.restore();
+            });
+        }
+        drawWheel();
 
-<script>
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
+        function spin() {
+            const btn = document.getElementById('spinBtn');
+            const msg = document.getElementById('message');
+            btn.disabled = true;
+            msg.innerText = "দেখা যাক কী কপালে আছে...";
 
-const options = ["5000", "1000", "500", "200", "100", "Dua"];
-const colors = ["#ff3b3b","#ff8c00","#00c853","#00b0ff","#7c4dff","#ffd600"];
+            // লজিক: ৭ (১ টাকা) অথবা ৮ (দোয়া) এর মধ্যে যেকোনো একটি র‍্যান্ডমলি আসবে
+            const riggedOptions = [7, 8]; 
+            const selectedSegment = riggedOptions[Math.floor(Math.random() * riggedOptions.length)];
+            
+            const extraSpins = (Math.floor(Math.random() * 5) + 5) * 360; 
+            const stopAngle = 360 - (selectedSegment * (360 / totalSegments)) - (180 / totalSegments);
+            currentRotation += extraSpins + stopAngle;
 
-function drawWheel() {
-  const arc = Math.PI * 2 / options.length;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-  for (let i = 0; i < options.length; i++) {
-    ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(150,150);
-    ctx.arc(150,150,150,i*arc,(i+1)*arc);
-    ctx.fill();
-
-    ctx.save();
-    ctx.translate(150,150);
-    ctx.rotate(i*arc + arc/2);
-    ctx.fillStyle="white";
-    ctx.font="16px Arial";
-    ctx.fillText(options[i],60,0);
-    ctx.restore();
-  }
-}
-drawWheel();
-
-function spin() {
-  const wheel = document.getElementById("wheel");
-  const sound = document.getElementById("spinSound");
-
-  sound.play();
-  if (navigator.vibrate) navigator.vibrate(200);
-
-  // 👉 Dua index = 5 (last option)
-  const duaIndex = 5;
-  const totalOptions = options.length;
-  const sectorAngle = 360 / totalOptions;
-
-  // extra spins for animation
-  const extraSpins = 5; // 5 full spins
-  // calculate stop angle exactly at center of Dua sector
-  const stopAngle = (360 - (duaIndex * sectorAngle) - (sectorAngle / 2));
-
-  const finalRotation = (extraSpins * 360) + stopAngle;
-
-  // apply rotation
-  wheel.style.transform = "rotate(" + finalRotation + "deg)";
-
-  setTimeout(() => {
-    document.getElementById("result").innerHTML =
-      "আপনার সাবস্ক্রিপশন সারা বছর এক্সপায়ারড ছিল। সালামি রিলোড করার জন্য পর্যাপ্ত 'যোগাযোগ' পাওয়া যায়নি। দয়া করে দোয়া নিয়ে সন্তুষ্ট থাকুন।";
-  }, 3000);
-}
-</script>
-
+            setTimeout(() => {
+                btn.disabled = false;
+                const result = segments[selectedSegment];
+                if(result === "দোয়া") {
+                    msg.innerText = "আফসোস! আপনি শুধু 'দোয়া' পেলেন। দোয়া-ই তো আসল সম্পদ! 😂";
+                } else {
+                    msg.innerText = "অভিনন্দন! আপনি ১ টাকা সালামি জিতেছেন! স্ক্রিনশট দিয়ে ইনবক্স করুন। 💸";
+                }
+            }, 4000);
+        }
+    </script>
 </body>
 </html>
