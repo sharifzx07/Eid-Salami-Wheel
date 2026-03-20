@@ -5,6 +5,12 @@
 <title>Salami Diben Koto?</title>
 
 <style>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Salami Diben Koto?</title>
+<style>
 body {
   text-align: center;
   font-family: Arial;
@@ -12,21 +18,14 @@ body {
   color: white;
 }
 
-h1 {
-  color: gold;
-}
+h1 { color: gold; }
 
-.container {
-  position: relative;
-  width: 300px;
-  margin: auto;
-}
+.container { position: relative; width: 300px; margin: auto; }
 
 canvas {
-  transition: transform 3s ease-out;
+  transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-/* Arrow */
 .arrow {
   width: 0;
   height: 0;
@@ -48,13 +47,9 @@ button {
   border-radius: 10px;
 }
 
-#result {
-  margin-top: 20px;
-  font-size: 18px;
-}
+#result { margin-top: 20px; font-size: 18px; }
 </style>
 </head>
-
 <body>
 
 <h1>Salami Diben Koto?</h1>
@@ -79,7 +74,7 @@ const options = ["5000", "1000", "500", "200", "100", "Dua"];
 const colors = ["#ff3b3b","#ff8c00","#00c853","#00b0ff","#7c4dff","#ffd600"];
 
 function drawWheel() {
-  const arc = Math.PI / 3;
+  const arc = Math.PI * 2 / options.length;
 
   for (let i = 0; i < options.length; i++) {
     ctx.beginPath();
@@ -104,22 +99,22 @@ function spin() {
   const sound = document.getElementById("spinSound");
 
   sound.play();
+  if (navigator.vibrate) navigator.vibrate(200);
 
-  if (navigator.vibrate) {
-    navigator.vibrate(200);
-  }
-
-  // 👉 Dua index = 5 (last)
+  // 👉 Dua index = 5 (last option)
   const duaIndex = 5;
-  const sectorAngle = 360 / 6;
+  const totalOptions = options.length;
+  const sectorAngle = 360 / totalOptions;
 
-  // 👉 calculate exact stop angle for Dua
-  const stopAngle = 360 - (duaIndex * sectorAngle) - (sectorAngle / 2);
+  // extra spins for animation
+  const extraSpins = 5; // 5 full spins
+  // calculate stop angle exactly at center of Dua sector
+  const stopAngle = (360 - (duaIndex * sectorAngle) - (sectorAngle / 2));
 
-  // 👉 add extra spins for animation
-  const finalDeg = (360 * 5) + stopAngle;
+  const finalRotation = (extraSpins * 360) + stopAngle;
 
-  wheel.style.transform = "rotate(" + finalDeg + "deg)";
+  // apply rotation
+  wheel.style.transform = "rotate(" + finalRotation + "deg)";
 
   setTimeout(() => {
     document.getElementById("result").innerHTML =
