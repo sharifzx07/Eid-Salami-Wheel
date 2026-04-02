@@ -1,120 +1,75 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<title>Salami Diben Koto?</title>
-<style>
-body {
-  text-align: center;
-  font-family: Arial;
-  background: #0f3d2e;
-  color: white;
-}
-
-h1 { color: gold; }
-
-.container { position: relative; width: 300px; margin: auto; }
-
-canvas {
-  transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-.arrow {
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 30px solid yellow;
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-button {
-  margin-top: 20px;
-  padding: 12px 25px;
-  font-size: 18px;
-  background: gold;
-  border: none;
-  border-radius: 10px;
-}
-
-#result { margin-top: 20px; font-size: 18px; }
-</style>
+    <meta charset="UTF-8">
+    <title>Bus Investment Agreement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .line {
+            border-bottom: 1px solid black;
+            display: inline-block;
+            width: 250px;
+        }
+        ul {
+            margin-top: 10px;
+        }
+        .signature {
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Salami Diben Koto?</h1>
-<p>Spin the wheel to claim your Eid Salami!</p>
+    <h1>Bus Investment Agreement (Draft)</h1>
 
-<div class="container">
-  <div class="arrow"></div>
-  <canvas id="wheel" width="300" height="300"></canvas>
-</div>
+    <div class="section">
+        <strong>প্রজেক্টের নাম:</strong> <span class="line"></span><br><br>
+        <strong>তারিখ:</strong> <span class="line"></span>
+    </div>
 
-<button onclick="spin()">SPIN NOW</button>
+    <div class="section">
+        আমি, <span class="line"></span> (নাম),<br>
+        পিতা/মাতা: <span class="line"></span><br>
+        ঠিকানা: <span class="line"></span><br>
+        মোবাইল: <span class="line"></span>
+    </div>
 
-<div id="result"></div>
+    <div class="section">
+        এই মর্মে সম্মতি প্রদান করছি যে, আমি ৪৫,০০০ (পঁয়তাল্লিশ হাজার) টাকা বিনিয়োগ করে একটি বাস ক্রয় প্রকল্পে অংশগ্রহণ করছি।
+    </div>
 
-<audio id="spinSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+    <div class="section">
+        <h2>শর্তাবলী:</h2>
+        <ul>
+            <li>মোট ১০০ জন সদস্যের মাধ্যমে এই বিনিয়োগ সম্পন্ন হবে।</li>
+            <li>প্রত্যেক সদস্য সমান অংশীদার হিসেবে গণ্য হবে।</li>
+            <li>একটি নির্দিষ্ট ম্যানেজমেন্ট টিম বাস পরিচালনার দায়িত্বে থাকবে।</li>
+            <li>সকল আর্থিক লেনদেন স্বচ্ছভাবে পরিচালিত হবে।</li>
+            <li>প্রয়োজন অনুযায়ী সদস্যগণ হিসাব পর্যালোচনা করতে পারবেন।</li>
+            <li>বাস সংক্রান্ত সকল সিদ্ধান্ত ম্যানেজমেন্ট ও সদস্যদের সম্মতিতে নেওয়া হবে।</li>
+            <li>যেকোনো ঝুঁকি (দুর্ঘটনা, ক্ষতি ইত্যাদি) মোকাবেলায় প্রয়োজনীয় ব্যবস্থা গ্রহণ করা হবে।</li>
+        </ul>
+    </div>
 
-<script>
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
+    <div class="section">
+        আমি উপরোক্ত শর্তাবলী পড়ে বুঝে স্বেচ্ছায় এই বিনিয়োগে অংশগ্রহণ করছি।
+    </div>
 
-const options = ["5000", "1000", "500", "200", "100", "Dua"];
-const colors = ["#ff3b3b","#ff8c00","#00c853","#00b0ff","#7c4dff","#ffd600"];
-
-function drawWheel() {
-  const arc = Math.PI * 2 / options.length;
-
-  for (let i = 0; i < options.length; i++) {
-    ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(150,150);
-    ctx.arc(150,150,150,i*arc,(i+1)*arc);
-    ctx.fill();
-
-    ctx.save();
-    ctx.translate(150,150);
-    ctx.rotate(i*arc + arc/2);
-    ctx.fillStyle="white";
-    ctx.font="16px Arial";
-    ctx.fillText(options[i],60,0);
-    ctx.restore();
-  }
-}
-drawWheel();
-
-function spin() {
-  const wheel = document.getElementById("wheel");
-  const sound = document.getElementById("spinSound");
-
-  sound.play();
-  if (navigator.vibrate) navigator.vibrate(200);
-
-  // 👉 Dua index = 5 (last option)
-  const duaIndex = 5;
-  const totalOptions = options.length;
-  const sectorAngle = 360 / totalOptions;
-
-  // extra spins for animation
-  const extraSpins = 5; // 5 full spins
-  // calculate stop angle exactly at center of Dua sector
-  const stopAngle = (360 - (duaIndex * sectorAngle) - (sectorAngle / 2));
-
-  const finalRotation = (extraSpins * 360) + stopAngle;
-
-  // apply rotation
-  wheel.style.transform = "rotate(" + finalRotation + "deg)";
-
-  setTimeout(() => {
-    document.getElementById("result").innerHTML =
-      "আপনার সাবস্ক্রিপশন সারা বছর এক্সপায়ারড ছিল। সালামি রিলোড করার জন্য পর্যাপ্ত 'যোগাযোগ' পাওয়া যায়নি। দয়া করে দোয়া নিয়ে সন্তুষ্ট থাকুন।";
-  }, 3000);
-}
-</script>
+    <div class="signature">
+        স্বাক্ষর: <span class="line"></span><br><br>
+        তারিখ: <span class="line"></span><br><br>
+        ম্যানেজমেন্ট প্রতিনিধির স্বাক্ষর: <span class="line"></span>
+    </div>
 
 </body>
 </html>
